@@ -1,38 +1,25 @@
-import crypto from 'crypto';
+import { Crypto } from './crypto';
 import { Transaction } from './transaction';
 
 export class Block {
   private timestamp = Date.now();
-  private transactions: Transaction[] = [];
-  private _hash: string;
+  public readonly transactions: Transaction[] = [];
 
-  constructor(public readonly previousHash: string) {
-    this._hash = this.toHash();
-  }
+  constructor(public readonly previousHash: string) {}
 
-  get hash() {
-    return this._hash;
-  }
-
-  getTransactionsByAddress(address: string) {
-    return this.transactions.filter(transaction => transaction.refers(address));
-  }
-
-  addTransaction(transaction: Transaction) {
-    this.transactions.push(transaction);
-  }
-
-  toJson() {
+  get json() {
     return {
       timestamp: this.timestamp,
-      transactions: this.transactions.map(transaction => transaction.toJson()),
+      transactions: this.transactions.map(transaction => transaction.json),
       previousHash: this.previousHash,
     };
   }
 
-  toHash() {
-    const data = JSON.stringify(this.toJson());
+  get hash() {
+    return Crypto.hash(JSON.stringify(this.json));
+  }
 
-    return crypto.createHash('sha256').update(data).digest('hex');
+  addTransaction(transaction: Transaction) {
+    this.transactions.push(transaction);
   }
 }

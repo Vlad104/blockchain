@@ -1,7 +1,7 @@
 import WebSocket from 'ws';
 import { Blockchain } from './core/blockchain';
 
-const P2P_PORT = parseInt(process.env.P2P_PORT) || 5001;
+const P2P_PORT = process.env.P2P_PORT ? parseInt(process.env.P2P_PORT) : 5001;
 const peers = process.env.PEERS ? process.env.PEERS.split(',') : [];
 
 export class P2PServer {
@@ -43,8 +43,8 @@ export class P2PServer {
   }
 
   syncChain(){
-    this.sockets.forEach(socket =>{
-        this.sendChain(socket);
+    this.sockets.forEach(socket => {
+      this.sendChain(socket);
     });
   }
 }

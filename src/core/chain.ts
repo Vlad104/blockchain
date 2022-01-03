@@ -25,13 +25,7 @@ export class Chain {
         return true;
       }
 
-      const previousBlock = chain[index - 1];
-
-      if (block.hash !== block.toHash()) {
-        return false;
-      }
-
-      if (block.previousHash !== previousBlock.hash) {
+      if (block.previousHash !== chain[index - 1].hash) {
         return false;
       }
 

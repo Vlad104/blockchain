@@ -22,13 +22,7 @@ export class Blockchain {
   }
 
   addTransaction(transaction: Transaction) {
-    if (this.validateTransaction(transaction)) {
-      this.chain.last().addTransaction(transaction);
-    }
-  }
-
-  getTransactionsByAddress(address: string) {
-    return this.chain.get().map(block => block.getTransactionsByAddress(address)).flat();
+    this.chain.last().addTransaction(transaction);
   }
 
   replaceChain(otherChain: Chain) {
@@ -43,30 +37,5 @@ export class Blockchain {
     }
     
     this.chain = otherChain;
-  }
-
-  validateTransaction(transaction: Transaction) {
-    if (transaction.amount >= this.getAddressAmount(transaction.from)) {
-      return true;
-    }
-
-    return false;
-  }
-
-  getAddressAmount(address: string) {
-    const transactions = this.getTransactionsByAddress(address);
-
-    let amount = 0;
-    for (const transaction of transactions) {
-      if (transaction.to === address) {
-        amount += transaction.amount;
-      }
-  
-      if (transaction.from === address) {
-        amount -= transaction.amount;
-      }
-    }
-
-    return amount;
   }
 }
